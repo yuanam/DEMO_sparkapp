@@ -8,7 +8,7 @@ import math
 global label_list
  
 def Handle_data():
-    source_file = "kddcup.data_10_percent.csv"
+    source_file = "kddcup.data_10_percent1.csv"
     handled_file = "kddcup_normal.data_10_percent.csv"
     data_file = open(handled_file,'w',newline='')
     with open(source_file,'r') as data_source:

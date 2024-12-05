@@ -8,7 +8,7 @@ global label_list  #label_list为全局变量
  
  
 def Find_Maxmin():
-    source_file = "kddcup.data_10_percent.csv" 
+    source_file = "kddcup.data_10_percent1.csv" 
     handled_file = "kddcup_1.data_10_percent_corrected.csv"
     dic = {}
     data_file = open(handled_file,'w',newline='')
