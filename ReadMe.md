@@ -4,7 +4,7 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 
 数据集下载地址：http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html
 
-<img src="photo/截屏2024-12-05 下午2.43.36.png" style="zoom:20%;" />
+<img src="deal_data/photo/截屏2024-12-05 下午2.43.36.png" style="zoom:20%;" />
 
 选择下载10%的子数据集作为我们此次分布式处理的数据：**kddcup.data_10_percent.gz**
 
