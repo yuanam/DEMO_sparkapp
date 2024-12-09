@@ -52,11 +52,34 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
   ```
   python find_one.py
   ```
+### 2）模型实现
+#### 自定义决策树实现
+基于 Spark 的 RDD ，实现节点分裂、基尼指数计算、递归树构建等核心算法，构建一个决策树分类器。结构如图所示。\
+（放图）
+#### Spark MLlib 决策树分类器
+利用 Spark MLlib 提供的 DecisionTreeClassifier，配置相应的参数，训练决策树分类模型。结构如图所示。\
+（放图）
+### 3）模型评估
+评估指标：分类的准确率\
+性能对比：对比自定义决策树和 MLlib 决策树在KDD Cup 1999上的训练时间和资源消耗。
+
+
+
 ## 3. 结果
 
-1. 实验设置
-2. 测试结果
+### 1）准确率情况
+本次实验准确率较高，效果良好：
+<img src="deal_data/photo/准确率.png" style="zoom:20%;" />
+### 2） 分布式与伪分布式
 
+### 3）ML与手动搭建
+ML决策树与手动搭建的决策树的运行情况分别如下：  
+<img src="deal_data/photo/ml决策树.png" style="zoom:20%;" />
+<img src="deal_data/photo/手动决策树.png" style="zoom:20%;" />
+
+
+- ML决策树的运行时间约为26秒，手动构建的决策树的运行时间约为32秒，ML决策树效果更佳；
+- ML决策树的completed jobs数量约为13个，而手动构建的决策树的completed jobs数量约为112个；
 
 ## 4. 分工
 
