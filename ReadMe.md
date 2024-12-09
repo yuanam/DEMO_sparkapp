@@ -85,6 +85,9 @@ ML决策树与手动搭建的决策树的运行情况分别如下：
 - ML决策树的completed jobs数量约为13个，而手动构建的决策树的completed jobs数量约为112个；
 - 单机 FileScanML没有分区，直接全部读入，Manual的分成了八个分区，分别读入；
 - <img src="deal_data/photo/八个分区.png" style="zoom:20%;" />
+- ML决策树的DAG，与手动决策树的DAG不同，分别展示如下：
+-  <img src="deal_data/photo/MLdag.png" style="zoom:20%;" />
+-   <img src="deal_data/photo/手动dag.png" style="zoom:20%;" />
 
 ## 4. 分工
 
