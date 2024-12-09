@@ -72,6 +72,9 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 <img src="deal_data/photo/准确率.png" style="zoom:20%;" />
 ### 2） 分布式与伪分布式
 
+- spark local的运行时间约为33秒，模型准确率约为0.95454
+- 分布式的运行时间约为53秒，模型准确率约为0.99279
+
 ### 3）ML与手动搭建
 ML决策树与手动搭建的决策树的运行情况分别如下：  
 <img src="deal_data/photo/ml决策树.png" style="zoom:20%;" />
@@ -80,6 +83,8 @@ ML决策树与手动搭建的决策树的运行情况分别如下：
 
 - ML决策树的运行时间约为26秒，手动构建的决策树的运行时间约为32秒，ML决策树效果更佳；
 - ML决策树的completed jobs数量约为13个，而手动构建的决策树的completed jobs数量约为112个；
+- 单机 FileScanML没有分区，直接全部读入，Manual的分成了八个分区，分别读入；
+- <img src="deal_data/photo/八个分区.png" style="zoom:20%;" />
 
 ## 4. 分工
 
