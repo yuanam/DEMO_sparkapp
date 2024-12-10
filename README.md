@@ -5,19 +5,17 @@
 
 1. 通过构建决策树模型预测是否受到网络攻击和网络攻击的类型
 
-2. 基于RDD搭建的Manual决策树 vs. 基于MLlib搭建的ML决策树
+2. 基于RDD搭建的Manual决策树 vs. 基于MLlib搭建的MLlib决策树
 
 
 ## 二、 实验方法
 
-### 1. 数据处理方法
-#### KDD CUP99数据预处理
-
+### 1. 数据预处理
 KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会议同时举行的第三届国际知识发现和数据挖掘工具竞赛使用的数据集。竞争任务是建立一个网络入侵检测器，这是一种能够区分称为入侵或攻击的“不良”连接和“良好”的正常连接的预测模型。该数据集包含一组要审核的标准数据，其中包括在军事网络环境中模拟的多种入侵。
 
 数据集下载地址：http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html
 
-<img src="deal_data/photo/截屏2024-12-05 下午2.43.36.png" style="zoom:20%;"/>
+<img src="deal_data/photo/截屏2024-12-05 下午2.43.36.png" style="width: 300px; height: auto;"/>
 
 选择下载10%的子数据集作为我们此次分布式处理的数据：**kddcup.data_10_percent.gz**
 
@@ -57,117 +55,98 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
   python find_one.py
   ```
 ### 2. 模型实现
-#### 自定义决策树实现
+#### Manual决策树实现
 基于 Spark 的 RDD ，实现节点分裂、基尼指数计算、递归树构建等核心算法，构建一个决策树分类器。结构如图所示。
 
-<img src="deal_data/photo/manual_tree.png" style="zoom:20%;"/>
+<img src="deal_data/photo/manual_tree.png" style="width: 300px; height: auto;"/>
+
+决策树内部示意图如下。
+
+<img src="deal_data/photo/迭代.png" style="width: 300px; height: auto;"/>
 
 #### Spark MLlib 决策树分类器
 利用 Spark MLlib 提供的 DecisionTreeClassifier，配置相应的参数，训练决策树分类模型。结构如图所示。
 
-<img src="deal_data/photo/ml_tree.png" style="zoom:20%;"/>
+<img src="deal_data/photo/ml_tree.png" style="width: 300px; height: auto;"/>
 
 ### 3. 模型评估
 评估指标：分类的准确率
 
-性能对比：对比自定义决策树和 MLlib 决策树在KDD Cup 1999上的训练时间和资源消耗。
-
-
+性能对比：对比Manual决策树和 MLlib 决策树在KDD Cup 1999上的训练时间和资源消耗。
 
 ## 三、 实验结果与分析
 
-### 1. 单机与分布式环境下自定义决策树的表现
-- 在单机中运行时间为53s左右，模型准确率为0.9545
+首先在四台机器上(ubuntu20.04)分别配置本机免密登陆和互相的免密登陆，在主节点配置好java1.8，hadoop3.4.1，spark3.4.4之后分发给两个worker节点和一个客户端节点。
 
+再本机完成基于Maven的Java编程后，分别在本地运行和打成jar包后传入服务器中提交运行，获得结果进行比较分析。
 
+### 1. 单机与分布式环境下Manual决策树和MLlib决策树的表现
 
-- 在分布式中运行时间为32s左右，模型准确率为0.9928
+- Manual决策树在单机中运行时间为53s左右，模型准确率为0.9481
 
-  <img src="deal_data/photo/准确率.png" style="zoom:20%;"/>
+  <img src="deal_data/photo/准确率_local.png" style="width: 300px; height: auto;"/>
 
-- 。。
+- Manual决策树在分布式中运行时间为32s左右，模型准确率为0.9864
 
-### 2. 基于RDD和基于MLlib决策树在分布式环境中的性能比较
+  <img src="deal_data/photo/准确率.png" style="width: 300px; height: auto;"/>
+  
+- MLlib决策树在分布式中运行时间为26s左右，模型准确率为0.9930
 
-- 基于RDD的决策树
+  <img src="deal_data/photo/准确率_ml.png" style="width: 300px; height: auto;"/>
 
-  - 产生了112个jobs，运行时间约为32秒
+### 2. Manual决策树和MLlib决策树在分布式环境中的性能比较
 
-  <img src="deal_data/photo/手动决策树.png" style="zoom:20%;"/>
-- 基于MLlib的决策树
+- 基于RDD的Manual决策树
+
+  - 产生了112个jobs，较多tasks，运行时间约为32秒
+
+  <img src="deal_data/photo/手动决策树.png" style="width: 300px; height: auto;"/>
+- 基于MLlib的MLlib决策树
 
   - 产生了13个jobs，运行时间约为26秒，效果更佳
 
-  <img src="deal_data/photo/ml决策树.png" style="zoom:20%;"/>
+  <img src="deal_data/photo/ml决策树.png" style="width: 300px; height: auto;"/>
 
 
 
-### 3. 结果的原因分析
+### 3. 相关结果分析
 
-1） 在单机FileScanRDD中
+1） 分布式运行中启用了两个executors执行任务
+
+<img src="deal_data/photo/多executors执行.png" style="width: 300px; height: auto;"/>
+
+2） 在Manual中耗时较长的部分
+
+
+- distinct 操作引入了宽依赖，触发了 Shuffle，被分为了两个stage
+
+  <img src="deal_data/photo/manual_count.png" style="width: 300px; height: auto;"/>
+
+- 缓存了mappartitionrdd的内容，能够在后续的调用中直接使用
+
+  <img src="deal_data/photo/dagvs.png" style="width: 300px; height: auto;"/>
+  
+- 通过对比ML决策树执行可以发现，还有更多缓存的空间可以提高效率
+
+  <img src="deal_data/photo/storagevs.png" style="width: 300px; height: auto;"/>
+
+3）通过对FileScanRDD分析发现
 
 
 - ML没有分区，直接全部读入；
+
 - Manual的分成了八个分区，分别读入；
 
-  <img src="deal_data/photo/MANUAL_PARTITION.png" style="zoom:20%;"/>
+  <img src="deal_data/photo/MANUAL_PARTITION.png" style="width: 300px; height: auto;"/>
 
-  <img src="deal_data/photo/ml_partition.png" style="zoom:20%;"/>
-
-2） 在分布式DAG中
-
-
-- count：ML vs. Manual
-
-  <img src="deal_data/photo/manual_count.png" style="zoom:20%;"/>  <img src="deal_data/photo/spark_count.png" style="zoom:20%;"/>
-
-
+  <img src="deal_data/photo/ml_partition.png" style="width: 300px; height: auto;"/>
 
 ## 四、分工
 
-经清源：ML决策树和集群搭建，PPT和报告
+经清源：MLlib决策树和集群搭建，PPT和报告
 
 刘佳凡：数据处理和集群搭建，PPT和报告
 
 沈王梦：Manual决策树，PPT和报告
 
 翟怡丹：PPT和报告
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
