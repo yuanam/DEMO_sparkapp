@@ -129,6 +129,10 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 - 通过对比ML决策树执行可以发现，还有更多缓存的空间可以提高效率
 
   <img src="deal_data/photo/storagevs.png" style="width: 300px; height: auto;"/>
+  
+- ML决策树采用了WholeStageCodegen优化查询执行，提升了整个数据流的运行效率
+
+  <img src="deal_data/photo/wholestagecodegen.png" style="width: 300px; height: auto;"/>
 
 3）通过对FileScanRDD分析发现
 
