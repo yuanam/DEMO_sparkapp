@@ -141,7 +141,7 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 - distinct 操作引入了宽依赖，触发了 Shuffle，被分为了两个stage
 
 	<div style="text-align: center;">
-	  <img src="deal_data/photo/manual_count.png" style="width: 500px; height: auto;"/>
+	  <img src="deal_data/photo/manual_count.png" style="width: 300px; height: auto;"/>
 	</div>
 	
 - 缓存了mappartitionrdd的内容，能够在后续的调用中直接使用
@@ -158,7 +158,7 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 - ML决策树采用了WholeStageCodegen优化查询执行，提升了整个数据流的运行效率
 	
 	<div style="text-align: center;">
-	  <img src="deal_data/photo/wholestagecodegen.png" style="width: 500px; height: auto;"/>
+	  <img src="deal_data/photo/wholestagecodegen.png" style="width: 300px; height: auto;"/>
 	</div> 
 
 3）通过对FileScanRDD分析发现
