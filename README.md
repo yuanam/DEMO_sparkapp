@@ -15,7 +15,9 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 
 数据集下载地址：http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html
 
-<img src="deal_data/photo/截屏2024-12-05 下午2.43.36.png" style="width: 300px; height: auto;"/>
+<div style="text-align: center;">
+    <img src="deal_data/photo/截屏2024-12-05 下午2.43.36.png" style="width: 500px; height: auto;" />
+</div>
 
 选择下载10%的子数据集作为我们此次分布式处理的数据：**kddcup.data_10_percent.gz**
 
@@ -58,16 +60,22 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 #### Manual决策树实现
 基于 Spark 的 RDD ，实现节点分裂、基尼指数计算、递归树构建等核心算法，构建一个决策树分类器。结构如图所示。
 
-<img src="deal_data/photo/manual_tree.png" style="width: 300px; height: auto;"/>
+<div style="text-align: center;">
+	<img src="deal_data/photo/manual_tree.png" style="width: 500px; height: auto;"/>
+</div>
 
 决策树内部示意图如下。
 
-<img src="deal_data/photo/迭代.png" style="width: 300px; height: auto;"/>
+<div style="text-align: center;">
+	<img src="deal_data/photo/迭代.png" style="width: 500px; height: auto;"/>
+</div>
 
 #### Spark MLlib 决策树分类器
 利用 Spark MLlib 提供的 DecisionTreeClassifier，配置相应的参数，训练决策树分类模型。结构如图所示。
 
-<img src="deal_data/photo/ml_tree.png" style="width: 300px; height: auto;"/>
+<div style="text-align: center;">
+	<img src="deal_data/photo/ml_tree.png" style="width: 500px; height: auto;"/>
+</div>
 
 ### 3. 模型评估
 评估指标：分类的准确率
@@ -84,15 +92,21 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 
 - Manual决策树在单机中运行时间为53s左右，模型准确率为0.9481
 
-  <img src="deal_data/photo/准确率_local.png" style="width: 300px; height: auto;"/>
-
+	<div style="text-align: center;">
+  	<img src="deal_data/photo/准确率_local.png" style="width: 500px; height: auto;"/>
+	</div>
+	
 - Manual决策树在分布式中运行时间为32s左右，模型准确率为0.9864
 
-  <img src="deal_data/photo/准确率.png" style="width: 300px; height: auto;"/>
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/准确率.png" style="width: 500px; height: auto;"/>
+  </div>
   
 - MLlib决策树在分布式中运行时间为26s左右，模型准确率为0.9930
-
-  <img src="deal_data/photo/准确率_ml.png" style="width: 300px; height: auto;"/>
+	
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/准确率_ml.png" style="width: 500px; height: auto;"/>
+	</div>
 
 ### 2. Manual决策树和MLlib决策树在分布式环境中的性能比较
 
@@ -100,39 +114,52 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 
   - 产生了112个jobs，较多tasks，运行时间约为32秒
 
-  <img src="deal_data/photo/手动决策树.png" style="width: 300px; height: auto;"/>
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/手动决策树.png" style="width: 500px; height: auto;"/>
+	</div>
+	
 - 基于MLlib的MLlib决策树
 
   - 产生了13个jobs，运行时间约为26秒，效果更佳
-
-  <img src="deal_data/photo/ml决策树.png" style="width: 300px; height: auto;"/>
-
+	
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/ml决策树.png" style="width: 500px; height: auto;"/>
+	</div>
 
 
 ### 3. 相关结果分析
 
 1） 分布式运行中启用了两个executors执行任务
 
-<img src="deal_data/photo/多executors执行.png" style="width: 300px; height: auto;"/>
+<div style="text-align: center;">
+	<img src="deal_data/photo/多executors执行.png" style="width: 500px; height: auto;"/>
+</div>
 
 2） 在Manual中耗时较长的部分
 
 
 - distinct 操作引入了宽依赖，触发了 Shuffle，被分为了两个stage
 
-  <img src="deal_data/photo/manual_count.png" style="width: 300px; height: auto;"/>
-
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/manual_count.png" style="width: 500px; height: auto;"/>
+	</div>
+	
 - 缓存了mappartitionrdd的内容，能够在后续的调用中直接使用
-
-  <img src="deal_data/photo/dagvs.png" style="width: 300px; height: auto;"/>
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/dagvs.png" style="width: 500px; height: auto;"/>
+	</div>
   
 - 通过对比ML决策树执行可以发现，还有更多缓存的空间可以提高效率
-
-  <img src="deal_data/photo/storagevs.png" style="width: 300px; height: auto;"/>
+	
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/storagevs.png" style="width: 500px; height: auto;"/>
+	</div>
   
 - ML决策树采用了WholeStageCodegen优化查询执行，提升了整个数据流的运行效率
-
-  <img src="deal_data/photo/wholestagecodegen.png" style="width: 300px; height: auto;"/>
+	
+	<div style="text-align: center;">
+	  <img src="deal_data/photo/wholestagecodegen.png" style="width: 500px; height: auto;"/>
+	</div> 
 
 3）通过对FileScanRDD分析发现
 
@@ -140,17 +167,21 @@ KDD Cup 1999数据集是与KDD-99第五届知识发现和数据挖掘国际会�
 - ML没有分区，直接全部读入；
 
 - Manual的分成了八个分区，分别读入；
+	
+	<div style="text-align: center;">
+  	<img src="deal_data/photo/MANUAL_PARTITION.png" style="width: 500px; height: auto;"/>
+  </div>
 
-  <img src="deal_data/photo/MANUAL_PARTITION.png" style="width: 300px; height: auto;"/>
-
-  <img src="deal_data/photo/ml_partition.png" style="width: 300px; height: auto;"/>
+	<div style="text-align: center;">
+  	<img src="deal_data/photo/ml_partition.png" style="width: 500px; height: auto;"/>
+  </div>
 
 ## 四、分工
 
-经清源：MLlib决策树和集群搭建，PPT和报告
+经清源25%：MLlib决策树、集群搭建和结果分析，PPT和报告
 
-刘佳凡：数据处理和集群搭建，PPT和报告
+刘佳凡25%：数据处理、集群搭建和结果分析，PPT和报告
 
-沈王梦：Manual决策树，PPT和报告
+沈王梦25%：Manual决策树和结果分析，PPT和报告
 
-翟怡丹：PPT和报告
+翟怡丹25%：结果分析，PPT和报告
